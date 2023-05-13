@@ -18,6 +18,17 @@ Mat4::Mat4(float R[3][3], float* X){
     this->a[3][3] = 1.0f;
 }
 
+Mat4::Mat4(float* X){
+    this->generateIdentity();
+    Mat4 RtX = generateRotX(X[3]);
+    Mat4 RtY = generateRotY(X[4]);
+    Mat4 RtZ = generateRotZ(X[5]);
+    this->multiply(RtX);
+    this->multiply(RtY);
+    this->multiply(RtZ);
+    for(int i = 0; i < 3; i++) this->a[i][3] = X[i];
+}
+
 Mat4::Mat4(float alpha, float a, float d){
     this->alphaad[0] = alpha;
     this->alphaad[1] = a;
@@ -78,9 +89,43 @@ Mat4 Mat4::generateIdentity(){
     return *this;
 }
 
+Mat4 Mat4::transpose(){
+    Mat4 c;
+    for(int i = 0; i < 4; i++) for(int j = 0; j < 4; j++) c.a[i][j] = this->a[j][i];
+    return c;
+}
+
+Mat4 Mat4::transpose(bool overWrite){
+    Mat4 c;
+    for(int i = 0; i < 4; i++) for(int j = 0; j < 4; j++) c.a[i][j] = this->a[j][i];
+    if(overWrite) this->write(c);
+    return c;
+}
+
+Mat4 Mat4::invert(){
+    Mat4 c;
+    for(int i = 0; i < 3; i++) for(int j = 0; j < 3; j++) c.a[i][j] = this->a[j][i];
+    for(int i = 0; i < 3; i++) for(int j = 0; j < 3; j++) c.a[3][i] += this->a[3][j] * this->a[j][i];
+    return c;
+}
+
+Mat4 Mat4::invert(bool overWrite){
+    Mat4 c;
+    for(int i = 0; i < 3; i++) for(int j = 0; j < 3; j++) c.a[i][j] = this->a[j][i];
+    for(int i = 0; i < 3; i++) for(int j = 0; j < 3; j++) c.a[3][i] += this->a[3][j] * this->a[j][i];
+    if(overWrite) this->write(c);
+    return c;
+}
+
 Mat4 Mat4::generateTrnX(float val){
     this->generateIdentity();
     this->writeCell(0, 3, val);
+    return *this;
+}
+
+Mat4 Mat4::generateTrnY(float val){
+    this->generateIdentity();
+    this->writeCell(1, 3, val);
     return *this;
 }
 
@@ -96,6 +141,15 @@ Mat4 Mat4::generateRotX(float theta){
     this->writeCell(1, 2, sin(theta) * (-1));
     this->writeCell(2, 1, sin(theta));
     this->writeCell(2, 2, cos(theta));
+    return *this;
+}
+
+Mat4 Mat4::generateRotY(float theta){
+    this->generateIdentity();
+    this->writeCell(0, 0, cos(theta));
+    this->writeCell(0, 2, sin(theta));
+    this->writeCell(2, 2, sin(theta) * (-1));
+    this->writeCell(2, 0, cos(theta));
     return *this;
 }
 

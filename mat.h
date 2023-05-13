@@ -21,6 +21,12 @@ class Mat4 {
         Mat4(float R[3][3], float* X);
         /**
         * @brief Constructor, makes a 4x4 matrix starting from a square array
+        * @param X[3] vector for x,y,z,a,b,c
+        * @return this
+        */
+        Mat4(float X[6]);
+        /**
+        * @brief Constructor, makes a 4x4 matrix starting from a square array
         * @param theta to be a pointer to the value of theta
         * @param alpha hartenbergs value alpha
         * @param a hartenbergs value a
@@ -65,13 +71,33 @@ class Mat4 {
         */
         Mat4 generateIdentity(); 
         /**
-         * @brief Writes the translation matrix around X axis on this
+        * @brief returns the transposed of the object matrix
+        * @param overWrite overwrites the result on the object if true
+        * @return this
+        */
+        Mat4 transpose();
+        Mat4 transpose(bool overWrite); 
+        /**
+        * @brief returns the inverted of the object matrix
+        * @param overWrite overwrites the result on the object if true
+        * @return this
+        */
+        Mat4 invert();
+        Mat4 invert(bool overWrite); 
+        /**
+         * @brief Writes the translation matrix along X axis on this
          * @param val lenght of translation
          * @return this
          */                          
         Mat4 generateTrnX(float val);
         /**
-         * @brief Writes the translation matrix around Z axis on this
+         * @brief Writes the translation matrix along Y axis on this
+         * @param val lenght of translation
+         * @return this
+         */                          
+        Mat4 generateTrnY(float val);
+        /**
+         * @brief Writes the translation matrix along Z axis on this
          * @param val lenght of translation
          * @return this
          */                                            
@@ -82,6 +108,12 @@ class Mat4 {
          * @return this
          */                                                  
         Mat4 generateRotX(float theta);
+        /**
+         * @brief Writes the rotational matrix around Y axis on this
+         * @param val angle in rads
+         * @return this
+         */                                                  
+        Mat4 generateRotY(float theta);
         /**
          * @brief Writes the rotational matrix around Z axis on this
          * @param val angle in rads
